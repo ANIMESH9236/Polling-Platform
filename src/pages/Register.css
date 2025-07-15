@@ -1,0 +1,71 @@
+.register-container {
+  background-color: #121212;
+  color: #f1f1f1;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  font-family: 'Segoe UI', sans-serif;
+  padding: 20px;
+}
+
+.register-container h2 {
+  font-size: 28px;
+  margin-bottom: 20px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 15px;
+  width: 300px;
+}
+
+input {
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-size: 16px;
+  background-color: #1e1e1e;
+  color: #fff;
+}
+
+input::placeholder {
+  color: #888;
+}
+
+button {
+  padding: 10px;
+  background-color: #1f6feb;
+  color: white;
+  border: none;
+  font-size: 16px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button:hover {
+  background-color: #1158c7;
+}
+
+.link-text {
+  margin-top: 20px;
+  font-size: 14px;
+}
+
+.link-text a {
+  color: #1f6feb;
+  text-decoration: none;
+}
+
+.link-text a:hover {
+  text-decoration: underline;
+}
+
+.error-msg {
+  color: #ff4d4d;
+  margin-bottom: 10px;
+  font-size: 14px;
+}
