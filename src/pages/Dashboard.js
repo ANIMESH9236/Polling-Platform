@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import { getCurrentUser, logoutUser } from '../components/Auth';
 import CreatePoll from '../components/CreatePoll';
+import './Dashboard.css';
 
 export default function Dashboard() {
   const [userPolls, setUserPolls] = useState([]);
@@ -24,29 +25,31 @@ export default function Dashboard() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>Dashboard</h2>
-      <p>Welcome, {user} <button onClick={handleLogout}>Logout</button></p>
+    <div className="dashboard-container">
+      <div className="dashboard-header">
+        <h2>Welcome, {user}</h2>
+        <button className="logout-button" onClick={handleLogout}>Logout</button>
+      </div>
 
-      <hr />
+      <div className="section create-poll-section">
+        <h3>Create a Poll</h3>
+        <CreatePoll />
+      </div>
 
-      <h3>Create a Poll</h3>
-      <CreatePoll />
-
-      <hr />
-
-      <h3>My Polls</h3>
-      {userPolls.length === 0 ? (
-        <p>You haven’t created any polls yet.</p>
-      ) : (
-        <ul>
-          {userPolls.map(poll => (
-            <li key={poll.id}>
-              <a href={`/poll/${poll.id}`}>{poll.title}</a>
-            </li>
-          ))}
-        </ul>
-      )}
+      <div className="section user-polls-section">
+        <h3>My Polls</h3>
+        {userPolls.length === 0 ? (
+          <p>You haven’t created any polls yet.</p>
+        ) : (
+          <ul>
+            {userPolls.map(poll => (
+              <li key={poll.id}>
+                <Link to={`/poll/${poll.id}`}>{poll.title}</Link>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
     </div>
   );
 }

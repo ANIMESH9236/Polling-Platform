@@ -7,6 +7,7 @@ import Dashboard from './pages/Dashboard';
 import PollPage from './pages/PollPage';
 import Register from './pages/Register';
 import PublicPolls from './pages/PublicPolls';
+import './App.css'; // or './App.css' depending on where you added it
 
 import './styles/main.css';
 
