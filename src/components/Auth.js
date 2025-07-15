@@ -1,4 +1,4 @@
-// src/components/Auth.js
+
 export const saveUser = (username, password) => {
   const users = JSON.parse(localStorage.getItem("users") || "{}");
   if (users[username]) {

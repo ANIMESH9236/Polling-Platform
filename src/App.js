@@ -7,13 +7,15 @@ import Dashboard from './pages/Dashboard';
 import PollPage from './pages/PollPage';
 import Register from './pages/Register';
 import PublicPolls from './pages/PublicPolls';
-import './App.css'; // or './App.css' depending on where you added it
+import './App.css';
+import Navbar from './components/Navbar';
 
 import './styles/main.css';
 
 function App() {
   return (
     <Router>
+      <Navbar />
       <Routes>
         <Route path="/" element={<Home />} />
         <Route path="/login" element={<Login />} />

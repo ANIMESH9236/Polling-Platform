@@ -1,4 +1,3 @@
-// src/components/ResultChart.js
 import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import {
@@ -7,16 +6,10 @@ import {
   LinearScale,
   BarElement,
   Tooltip,
-  Legend
+  Legend,
 } from 'chart.js';
 
-ChartJS.register(
-  CategoryScale,
-  LinearScale,
-  BarElement,
-  Tooltip,
-  Legend
-);
+ChartJS.register(CategoryScale, LinearScale, BarElement, Tooltip, Legend);
 
 export default function ResultChart({ poll }) {
   if (!poll || !poll.options) return null;
@@ -27,8 +20,8 @@ export default function ResultChart({ poll }) {
       {
         label: 'Votes',
         data: poll.options.map(opt => opt.votes),
-        backgroundColor: 'rgba(75,192,192,0.6)',
-        borderColor: 'rgba(75,192,192,1)',
+        backgroundColor: '#1f6feb',
+        borderColor: '#1f6feb',
         borderWidth: 1,
         borderRadius: 6,
       },
@@ -37,18 +30,44 @@ export default function ResultChart({ poll }) {
 
   const options = {
     responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      legend: {
+        labels: {
+          color: '#c9d1d9', 
+          font: { size: 14 }
+        }
+      },
+      tooltip: {
+        backgroundColor: '#161b22',
+        titleColor: '#f0f6fc',
+        bodyColor: '#c9d1d9',
+        borderColor: '#30363d',
+        borderWidth: 1,
+      }
+    },
     scales: {
+      x: {
+        ticks: { color: '#c9d1d9' },
+        grid: { color: '#30363d' }
+      },
       y: {
         beginAtZero: true,
-        ticks: { stepSize: 1 },
-      },
-    },
+        ticks: {
+          stepSize: 1,
+          color: '#c9d1d9'
+        },
+        grid: { color: '#30363d' }
+      }
+    }
   };
 
   return (
-    <div style={{ marginTop: '30px' }}>
-      <h3>Poll Analytics</h3>
-      <Bar data={data} options={options} />
+    <div style={{ marginTop: '30px', background: '#0d1117', padding: '20px', borderRadius: '8px' }}>
+      <h3 style={{ color: '#f0f6fc', marginBottom: '15px' }}>Poll Analytics</h3>
+      <div style={{ height: '300px' }}>
+        <Bar data={data} options={options} />
+      </div>
     </div>
   );
 }

@@ -2,6 +2,7 @@ import React, { useEffect, useState } from 'react';
 import { useParams } from 'react-router-dom';
 import { getCurrentUser } from '../components/Auth';
 import ResultChart from '../components/ResultChart';
+import './PollPage.css'; // ✅ Add CSS
 
 export default function PollPage() {
   const { pollId } = useParams();
@@ -9,7 +10,6 @@ export default function PollPage() {
   const [selectedOption, setSelectedOption] = useState('');
   const [hasVoted, setHasVoted] = useState(false);
   const [error, setError] = useState('');
-
   const currentUser = getCurrentUser();
 
   useEffect(() => {
@@ -18,7 +18,6 @@ export default function PollPage() {
     if (found) {
       setPoll(found);
 
-      // Check if user has already voted
       const votes = JSON.parse(localStorage.getItem('votes') || '{}');
       if (votes[currentUser]?.includes(pollId)) {
         setHasVoted(true);
@@ -27,24 +26,17 @@ export default function PollPage() {
   }, [pollId, currentUser]);
 
   const handleVote = () => {
-    if (!currentUser) {
-      setError('You must be logged in to vote.');
-      return;
-    }
-    if (selectedOption === '') {
-      setError('Please select an option.');
-      return;
-    }
+    if (!currentUser) return setError('You must be logged in to vote.');
+    if (!selectedOption) return setError('Please select an option.');
 
     const polls = JSON.parse(localStorage.getItem('polls') || '[]');
     const updatedPolls = polls.map(p => {
       if (p.id === poll.id) {
-        const newOptions = p.options.map((opt, idx) => {
-          if (idx.toString() === selectedOption) {
-            return { ...opt, votes: opt.votes + 1 };
-          }
-          return opt;
-        });
+        const newOptions = p.options.map((opt, idx) =>
+          idx.toString() === selectedOption
+            ? { ...opt, votes: opt.votes + 1 }
+            : opt
+        );
         return { ...p, options: newOptions };
       }
       return p;
@@ -54,41 +46,35 @@ export default function PollPage() {
     setPoll(updatedPolls.find(p => p.id === poll.id));
     setHasVoted(true);
 
-    // Store user's vote
     const votes = JSON.parse(localStorage.getItem('votes') || '{}');
     if (!votes[currentUser]) votes[currentUser] = [];
     votes[currentUser].push(poll.id);
     localStorage.setItem('votes', JSON.stringify(votes));
   };
 
-  if (!poll) return <p>Loading poll...</p>;
+  if (!poll) return <p className="poll-loading">Loading poll...</p>;
 
   const totalVotes = poll.options.reduce((sum, opt) => sum + opt.votes, 0);
 
   return (
-    <div style={{ padding: '20px' }}>
-      <h2>{poll.title}</h2>
-        <p>Share this poll:
-        <input
-            type="text"
-            value={window.location.href}
-            readOnly
-            style={{ width: '60%', marginLeft: '10px' }}
-        />
-        <button
-            onClick={() => {
-            navigator.clipboard.writeText(window.location.href);
-            alert("Poll link copied to clipboard!");
-            }}
-            style={{ marginLeft: '10px' }}
-        >
-            Copy Link
-        </button>
-        </p>
+    <div className="poll-page">
+      <h2 className="poll-title">{poll.title}</h2>
 
+      <div className="poll-share">
+        <label>Share this poll:</label>
+        <input type="text" value={window.location.href} readOnly />
+        <button
+          onClick={() => {
+            navigator.clipboard.writeText(window.location.href);
+            alert('Poll link copied to clipboard!');
+          }}
+        >
+          Copy Link
+        </button>
+      </div>
 
       {hasVoted ? (
-        <>
+        <div className="poll-results">
           <h3>Results:</h3>
           <ul>
             {poll.options.map((opt, idx) => {
@@ -97,37 +83,38 @@ export default function PollPage() {
                 : 0;
               return (
                 <li key={idx}>
-                  {opt.text} - {opt.votes} votes ({percent}%)
+                  <span>{opt.text}</span>
+                  <span>{opt.votes} votes ({percent}%)</span>
                 </li>
               );
             })}
           </ul>
-          {hasVoted && <ResultChart poll={poll} />}
-
           <ResultChart poll={poll} />
-
-        </>
+        </div>
       ) : (
-        <>
+        <form
+          className="poll-form"
+          onSubmit={(e) => {
+            e.preventDefault();
+            handleVote();
+          }}
+        >
           <h3>Cast Your Vote:</h3>
-          {error && <p style={{ color: 'red' }}>{error}</p>}
-          <form onSubmit={(e) => { e.preventDefault(); handleVote(); }}>
-            {poll.options.map((opt, idx) => (
-              <div key={idx}>
-                <input
-                  type="radio"
-                  name="pollOption"
-                  value={idx}
-                  checked={selectedOption === idx.toString()}
-                  onChange={(e) => setSelectedOption(e.target.value)}
-                />
-                <label>{opt.text}</label>
-              </div>
-            ))}
-            <br />
-            <button type="submit">Submit Vote</button>
-          </form>
-        </>
+          {error && <p className="poll-error">{error}</p>}
+          {poll.options.map((opt, idx) => (
+            <label key={idx} className="poll-option">
+              <input
+                type="radio"
+                name="pollOption"
+                value={idx}
+                checked={selectedOption === idx.toString()}
+                onChange={(e) => setSelectedOption(e.target.value)}
+              />
+              {opt.text}
+            </label>
+          ))}
+          <button type="submit" className="vote-btn">Submit Vote</button>
+        </form>
       )}
     </div>
   );

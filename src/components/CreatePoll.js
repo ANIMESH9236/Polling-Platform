@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { getCurrentUser } from './Auth';
+import './CreatePoll.css';
 
 export default function CreatePoll() {
   const [title, setTitle] = useState('');
@@ -37,7 +38,7 @@ export default function CreatePoll() {
 
     const polls = JSON.parse(localStorage.getItem('polls') || '[]');
     const newPoll = {
-      id: Date.now().toString(), // unique ID
+      id: Date.now().toString(),
       title,
       options: filteredOptions.map(opt => ({ text: opt, votes: 0 })),
       createdBy: currentUser,
@@ -49,35 +50,36 @@ export default function CreatePoll() {
   };
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="create-poll-container">
       <h2>Create New Poll</h2>
-      {error && <p style={{ color: 'red' }}>{error}</p>}
-      <form onSubmit={handleSubmit}>
+      {error && <p className="error-message">{error}</p>}
+      <form onSubmit={handleSubmit} className="create-poll-form">
         <input
           type="text"
           placeholder="Poll Title"
           value={title}
           onChange={(e) => setTitle(e.target.value)}
           required
-        /><br /><br />
+        />
 
         {options.map((opt, idx) => (
-          <div key={idx}>
-            <input
-              type="text"
-              placeholder={`Option ${idx + 1}`}
-              value={opt}
-              onChange={(e) => handleOptionChange(e.target.value, idx)}
-              required
-            /><br /><br />
-          </div>
+          <input
+            key={idx}
+            type="text"
+            placeholder={`Option ${idx + 1}`}
+            value={opt}
+            onChange={(e) => handleOptionChange(e.target.value, idx)}
+            required
+          />
         ))}
 
         {options.length < 5 && (
-          <button type="button" onClick={addOption}>+ Add Option</button>
+          <button type="button" className="add-option" onClick={addOption}>
+            + Add Option
+          </button>
         )}
-        <br /><br />
-        <button type="submit">Create Poll</button>
+
+        <button type="submit" className="submit-poll">Create Poll</button>
       </form>
     </div>
   );

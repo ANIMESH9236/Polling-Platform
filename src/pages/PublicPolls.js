@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
+import './PublicPolls.css';
 
 export default function PublicPolls() {
   const [polls, setPolls] = useState([]);
@@ -10,16 +11,18 @@ export default function PublicPolls() {
   }, []);
 
   return (
-    <div style={{ padding: '20px' }}>
+    <div className="public-polls-container">
       <h2>📢 Public Polls</h2>
       {polls.length === 0 ? (
-        <p>No public polls available yet.</p>
+        <p className="no-polls-msg">No public polls available yet.</p>
       ) : (
-        <ul>
+        <ul className="polls-list">
           {polls.map((poll) => (
-            <li key={poll.id} style={{ marginBottom: '10px' }}>
-              <strong>{poll.title}</strong> <br />
-              <Link to={`/poll/${poll.id}`}>View & Vote</Link>
+            <li key={poll.id} className="poll-item">
+              <div className="poll-title">{poll.title}</div>
+              <Link className="view-link" to={`/poll/${poll.id}`}>
+                View & Vote →
+              </Link>
             </li>
           ))}
         </ul>
